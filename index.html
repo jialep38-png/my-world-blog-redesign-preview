@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="霁风的小圈，全新视觉预览。写一些字，做一些东西，把喜欢的留在这里。">
+  <meta name="theme-color" content="#e5e5df">
+  <title>霁风的小圈 — 设计预览</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' fill='%23ed512f'/%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/noto-serif-sc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="typography.css">
+  <script src="motion.js" defer></script>
+</head>
+<body data-view="home">
+  <a class="skip-link" href="#main-content">跳到内容</a>
+  <div class="intro" hidden aria-hidden="true">
+    <div class="intro-top"><span>JI_FENG</span><span>一个小小的世界</span></div>
+    <div class="intro-mark"><svg viewBox="0 0 500 300"><ellipse cx="250" cy="150" rx="218" ry="74" transform="rotate(-24 250 150)"/><circle cx="250" cy="150" r="82"/></svg><i></i></div>
+    <div class="intro-bottom"><span>霁风的小圈</span><span>正在展开 <b>↗</b></span></div>
+  </div>
+  <div class="page-wipe" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <header class="site-header">
+    <a href="#/home" class="brand" aria-label="霁风的小圈首页">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="10"/><ellipse cx="20" cy="20" rx="19" ry="7" transform="rotate(-32 20 20)"/><rect x="29" y="6" width="6" height="6"/></svg>
+      <span>JI_FENG<small>霁风的小圈</small></span>
+    </a>
+    <nav class="main-nav" aria-label="主导航">
+      <a href="#/home" data-route="home" aria-current="page"><span>首页</span></a>
+      <a href="#/essay" data-route="essay"><span>随笔</span></a>
+      <a href="#/projects" data-route="projects"><span>项目</span></a>
+      <a href="#/planets" data-route="planets"><span>小星球</span></a>
+      <a href="#/about" data-route="about"><span>关于</span></a>
+    </nav>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">目录 <span>＋</span></button>
+  </header>
+  <div class="site-menu" id="site-menu" hidden>
+    <p class="eyebrow">去哪里逛逛？</p>
+    <a href="#/home">首页 <span>00</span></a><a href="#/essay">随笔 <span>01</span></a>
+    <a href="#/projects">项目 <span>02</span></a><a href="#/planets">小星球 <span>03</span></a>
+    <a href="#/about">关于 <span>04</span></a>
+    <div class="menu-minor"><a href="https://2006038.xyz/bits/">碎片 ↗</a><a href="https://2006038.xyz/memo/">随记 ↗</a><a href="https://2006038.xyz/archive/">归档 ↗</a></div>
+  </div>
+
+  <main id="main-content" tabindex="-1">
+    <div class="view" data-page="home">
+      <section class="hero trail-zone" aria-labelledby="hero-title">
+        <div class="hero-kicker eyebrow"><span><i class="square"></i> 个人记录 / 自由生长</span><span>NOTES ON A SMALL WORLD</span></div>
+        <h1 id="hero-title" class="hero-title quiet"><span>霁风的</span><span>小圈<em>。</em></span></h1>
+        <svg class="hero-line" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true"><path d="M -120 620 C 0 360 280 352 425 502 C 589 671 195 833 131 633 C 49 376 816 266 1308 511 C 1528 620 1515 806 1315 870 L 80 870"/></svg>
+        <div class="hero-intro quiet"><p>写一些字，<br>做一些东西，<br>把喜欢的留在这里。</p><a class="text-link" href="#/essay">读读随笔 <span>↗</span></a></div>
+        <figure class="hero-art quiet"><img src="assets/hero.png" width="1920" height="1072" alt="花田里，一位少年画画，另一位捧着花，身后是蓝天与盛开的黄色花朵" fetchpriority="high"><figcaption><span>日常的一小块切面</span><span>FIG. 001 / 花与线</span></figcaption></figure>
+        <span class="hero-square" aria-hidden="true"></span>
+        <div class="hero-bottom eyebrow"><span>随笔 · 项目 · 小星球</span><a href="#chapters" data-start-journey>向下，慢慢逛 <span>↓</span></a><span>JI_FENG / 2026</span></div>
+      </section>
+
+      <section class="journey" id="chapters" aria-label="内容章节">
+        <div class="journey-sticky">
+          <div class="chapter-index" aria-label="章节索引">
+            <span class="eyebrow">INDEX</span><div class="index-buttons"><i class="index-marker" aria-hidden="true"></i><button type="button" data-chapter="0" aria-label="章节 01 随笔" aria-pressed="true">01</button><button type="button" data-chapter="1" aria-label="章节 02 项目" aria-pressed="false">02</button><button type="button" data-chapter="2" aria-label="章节 03 小星球" aria-pressed="false">03</button></div>
+          </div>
+          <div class="journey-track">
+            <article class="chapter chapter-essay" id="chapter-0">
+              <div class="chapter-heading"><p class="eyebrow">01 / 随笔</p><h2>最近，<br>写在这里<span class="accent">。</span></h2><p class="chapter-description">近况、观察，<br>还有一些慢慢想明白的事。</p><a class="text-link" href="#/essay">全部随笔 <span>↗</span></a></div>
+              <div class="chapter-content quiet">
+                <a class="featured-story" href="#/reading"><span class="eyebrow">2026.05.10 / 随想</span><h3>把博客重新接上线：<br>一次内容整理小记</h3><p>先让它重新变成一个<br>可以持续写东西的地方。</p><span class="read-arrow" aria-hidden="true">↗</span></a>
+                <a class="story-row" href="https://2006038.xyz/archive/spring-2026-systems-recap/"><span class="eyebrow">阶段复盘</span><h3>三月底到五月初：把零散想法做成可运行的小系统</h3><span aria-hidden="true">↗</span></a>
+              </div>
+              <span class="chapter-running eyebrow">WORDS / OBSERVATIONS / DAILY LIFE</span>
+            </article>
+            <article class="chapter chapter-projects" id="chapter-1">
+              <div class="chapter-heading"><p class="eyebrow">02 / 项目</p><h2>把想法，<br>做出来<span class="accent">。</span></h2><p class="chapter-description">记录工具、实验，<br>以及动手的过程。</p><a class="text-link" href="#/projects">看看项目 <span>↗</span></a></div>
+              <div class="chapter-content quiet project-pair">
+                <a href="https://2006038.xyz/projects/arxiv-reader-paper-radar/" class="project-preview"><span class="eyebrow">01 / 论文阅读</span><h3>arXiv<br><em>Reader</em></h3><p>论文自动推送与中文摘要</p><span class="project-bottom"><span>Python · arXiv</span><span>↗</span></span></a>
+                <a href="https://2006038.xyz/projects/webcoding-cli-agent-workbench/" class="project-preview"><span class="eyebrow">02 / 本地工具</span><h3>Web<br><em>coding</em></h3><p>浏览器里的本机 CLI Agent 工作台</p><span class="project-bottom"><span>Node.js · WebSocket</span><span>↗</span></span></a>
+              </div>
+              <span class="chapter-running eyebrow">IDEAS / EXPERIMENTS / WORK IN PROGRESS</span>
+            </article>
+            <article class="chapter chapter-planets" id="chapter-2">
+              <div class="chapter-heading"><p class="eyebrow">03 / 小星球</p><h2>有些喜欢，<br>有了形状<span class="accent">。</span></h2><p class="chapter-description">五首歌，五个小小的世界。<br>可以绕着它们，慢慢看一圈。</p><a class="text-link" href="#/planets">进入小星球 <span>↗</span></a></div>
+              <a class="planet-peek quiet" href="#/planets"><img src="assets/planets/yesterday-today/cover.webp" width="1600" height="1600" alt="粉紫色的小星球：昨天，今天" loading="lazy"><span><span>昨天，今天</span><span class="eyebrow">YESTERDAY, TODAY ↗</span></span></a>
+              <span class="chapter-running eyebrow">MUSIC / OBJECTS / LITTLE WORLDS</span>
+            </article>
+          </div>
+          <div class="journey-rail" aria-hidden="true"><span></span><i></i></div>
+          <p class="journey-hint eyebrow">继续下滑，向右走 <span>→</span></p>
+        </div>
+      </section>
+
+      <section class="bridge" aria-label="从文字到小星球的转场">
+        <div class="bridge-sticky">
+          <div class="bridge-color" aria-hidden="true"></div>
+          <svg class="thread-field" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <div class="bridge-copy"><span class="eyebrow">BETWEEN THE LINES</span><p>线的另一头，<br>还有一个小小的世界。</p></div>
+          <i class="bridge-node" aria-hidden="true"></i>
+        </div>
+      </section>
+
+      <section class="constellation" id="constellation" aria-labelledby="constellation-title">
+        <div class="constellation-sticky">
+          <canvas id="particle-field" aria-hidden="true"></canvas>
+          <div class="constellation-label eyebrow"><i class="square"></i> 小星球 / 五个关于喜欢的形状</div>
+          <div class="constellation-copy"><h2 id="constellation-title">散落的喜欢，<br><em>自成一圈。</em></h2><p>把音乐里的片刻，<br>放进可以环绕的微型世界。</p><a class="text-link" href="#/planets">浏览全部作品 <span>↗</span></a></div>
+          <div class="particle-state eyebrow"><span>01</span><span data-particle-label>聚成一个小圈</span><span>↓</span></div>
+        </div>
+      </section>
+
+      <section class="small-gallery" aria-label="五颗小星球">
+        <div class="section-heading"><span class="eyebrow">THE COLLECTION / 05 WORLDS</span><a href="#/planets" class="text-link">慢慢看 <span>↗</span></a></div>
+        <div class="gallery-strip" data-gallery="home"></div>
+      </section>
+      <footer class="home-footer trail-zone">
+        <div class="footer-label eyebrow"><span>END OF THIS LITTLE JOURNEY</span><span>还有很多，下次再聊。</span></div>
+        <a href="#/about" class="footer-title quiet">很高兴，<br>在这里遇见你<span>↗</span></a>
+        <div class="footer-bottom"><span>霁风的小圈 / Ji_Feng</span><div><a href="https://2006038.xyz/archive/">归档</a><a href="https://2006038.xyz/rss.xml">RSS</a><a href="#/home">回到开头 ↑</a></div><span>2026</span></div>
+      </footer>
+    </div>
+
+    <div class="view inner-view" data-page="essay" hidden>
+      <section class="inner-hero"><div class="eyebrow"><i class="square"></i> 01 / WORDS & OBSERVATIONS</div><h1>写下来的，<br><em>就留下了。</em></h1><p>随想、阶段复盘和稍微完整一点的技术观察。</p><span class="oversized-index" aria-hidden="true">01</span></section>
+      <div class="editorial-list">
+        <a href="#/reading"><span class="list-date">2026<br>05.10</span><div><span class="eyebrow">随想 / 博客 / 写作</span><h2>把博客重新接上线：<br>一次内容整理小记</h2><p>记录一次个人博客重新恢复更新、整理栏目和找回写作入口的过程。</p></div><span class="list-arrow">↗</span></a>
+        <a href="https://2006038.xyz/archive/spring-2026-systems-recap/"><span class="list-date">2026<br>05.10</span><div><span class="eyebrow">阶段复盘</span><h2>三月底到五月初：<br>把零散想法做成可运行的小系统</h2><p>数学建模内容系统、文旅 Demo、PPT 素材工具与日常工作流的阶段回顾。</p></div><span class="list-arrow">↗</span></a>
+      </div>
+      <div class="inner-end"><p>文字慢慢积攒，日子也慢慢向前。</p><a class="text-link" href="https://2006038.xyz/essay/">现有全部随笔 <span>↗</span></a></div>
+    </div>
+
+    <div class="view inner-view" data-page="projects" hidden>
+      <section class="inner-hero"><div class="eyebrow"><i class="square"></i> 02 / THINGS IN THE MAKING</div><h1>手边的事，<br><em>动手的痕迹。</em></h1><p>具体项目、工具流和构建过程。保留中间判断，也记录还没做完的部分。</p><span class="oversized-index" aria-hidden="true">02</span></section>
+      <div class="project-board">
+        <article><div class="project-cover"><span class="eyebrow">01 / RESEARCH TOOL</span><span class="project-word">arXiv<br><em>Reader</em></span><svg viewBox="0 0 300 300" aria-hidden="true"><circle cx="150" cy="150" r="100"/><ellipse cx="150" cy="150" rx="140" ry="40" transform="rotate(-35 150 150)"/></svg></div><div class="project-meta"><span>Python / arXiv / OpenAI API</span><span>进行中</span></div><h2><a href="https://2006038.xyz/projects/arxiv-reader-paper-radar/">论文自动推送与中文摘要 ↗</a></h2><p>降低每天重新打开论文信息流的成本，让论文发现成为稳定流程。</p></article>
+        <article><div class="project-cover alternate"><span class="eyebrow">02 / LOCAL WORKSPACE</span><span class="project-word">Web<br><em>coding</em></span><div class="code-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div><div class="project-meta"><span>Node.js / WebSocket / PWA</span><span>进行中</span></div><h2><a href="https://2006038.xyz/projects/webcoding-cli-agent-workbench/">浏览器里的本机 CLI Agent 工作台 ↗</a></h2><p>浏览器负责会话与可视化交互，本机继续运行原有 CLI 工具链。</p></article>
+      </div>
+      <div class="inner-end"><a href="https://2006038.xyz/projects/" class="text-link">现有全部项目 <span>↗</span></a></div>
+    </div>
+
+    <div class="view inner-view" data-page="planets" hidden>
+      <section class="inner-hero planet-inner-hero"><div class="eyebrow"><i class="square"></i> 03 / FIVE LITTLE WORLDS</div><h1>喜欢的歌，<br><em>长成了星球。</em></h1><p>五件可以环绕观看的小作品。每一颗，都留着一点自己的情绪。</p><svg viewBox="0 0 700 400" aria-hidden="true"><ellipse cx="350" cy="200" rx="320" ry="100" transform="rotate(-22 350 200)"/><circle cx="350" cy="200" r="125"/></svg></section>
+      <div class="planet-collection" data-gallery="full"></div>
+      <div class="inner-end"><a href="https://2006038.xyz/planets/" class="text-link">现有星球展厅与三维浏览 <span>↗</span></a></div>
+    </div>
+
+    <div class="view inner-view" data-page="about" hidden>
+      <section class="inner-hero about-hero trail-zone"><div class="eyebrow"><i class="square"></i> 04 / HELLO, I'M JI_FENG</div><h1 class="quiet">我是霁风。<br><em>欢迎来逛逛。</em></h1><div class="about-note quiet"><p>这里记录日常、技术、项目，<br>也放一些单纯喜欢的东西。</p><p>有时候完整写一篇，<br>有时候只是留下一个片刻。</p><a href="https://2006038.xyz/about/" class="text-link">更多关于我 <span>↗</span></a></div><figure class="about-photo quiet"><img src="assets/hero.png" alt="原博客的花田插画" width="1920" height="1072"></figure></section>
+      <div class="about-links"><a href="#/essay">读读随笔 <span>↗</span></a><a href="#/projects">看看项目 <span>↗</span></a><a href="#/planets">逛逛星球 <span>↗</span></a></div>
+    </div>
+
+    <div class="view reading-view" data-page="reading" hidden>
+      <div class="reading-progress" aria-hidden="true"><i></i></div>
+      <header class="reading-header"><a href="#/essay" class="text-link">← 返回随笔</a><div class="eyebrow">2026.05.10 / 随想 · 博客 · 写作</div><h1>把博客重新接上线：<br>一次内容整理小记</h1><p>记录一次个人博客重新恢复更新、整理栏目和找回写作入口的过程。</p></header>
+      <div class="reading-grid"><aside><span class="eyebrow">ON THIS PAGE</span><a href="#reading-open">先把入口打开</a><a href="#reading-order">重新分一下内容位置</a><a href="#reading-process">不把博客写成展览柜</a></aside>
+      <article class="reading-prose">
+        <h2 id="reading-open">先把入口打开</h2><p>这次重新整理博客，目标其实很简单：先让它重新变成一个可以持续写东西的地方。</p><p>过去一段时间，很多想法都散在不同位置。有些在临时笔记里，有些在项目目录里，有些只停留在聊天框和脑子里。它们不是没有价值，只是没有被放到一个以后还能找回来的地方。</p><p>博客断开的时间越久，重新开始时就越容易想“一次性修好所有东西”。但这通常会变成新的拖延。所以这次我给自己的要求很克制：不追求完整重构，先恢复内容流动。</p>
+        <h2 id="reading-order">重新分一下内容位置</h2><p>目前这个小圈里，内容大概分成几类：</p><ul><li>essay：放随想、阶段复盘和稍微完整一点的技术观察；</li><li>projects：放具体项目、工具流和构建过程；</li><li>memo：放短记录，不要求成文，但要留下当天上下文；</li><li>archive：把历史内容串起来，方便之后回看。</li></ul><p>这个分法不复杂，但它对我有用。写之前先判断内容属于哪里，就不用每次重新设计文章形态。</p>
+        <h2 id="reading-process">不把博客写成展览柜</h2><p>我不太想把这里变成一个纯成果展示页。个人博客更适合保留过程感：哪里卡住了，为什么调整，哪些决定只是当时的选择。</p><p>很多技术工作真正有价值的部分，并不只在最终版本里，而在那些中间判断里。</p><blockquote>博客不一定要很宏大。它可以只是一个稳定的工作台：放下想法，整理路径，给未来的自己留一盏灯。</blockquote><a class="text-link" href="https://2006038.xyz/archive/reconnect-blog-content-notes/">查看完整原文 <span>↗</span></a>
+      </article></div>
+    </div>
+  </main>
+  <div class="proposal-tools"><span>设计预览</span><button type="button" id="replay-intro">重播开场 ↗</button></div>
+  <div class="sr-only" id="route-status" role="status" aria-live="polite"></div>
+</body>
+</html>
