@@ -61,7 +61,7 @@ def main() -> None:
         rules.append(
             "@font-face {\n"
             f'  font-family: "{family}";\n'
-            f'  src: url("{filename}.woff2?v=4") format("woff2");\n'
+            f'  src: url("{filename}.woff2?v=4.1") format("woff2");\n'
             f"  font-style: {style};\n"
             f"  font-weight: {weight};\n"
             "  font-display: swap;\n"

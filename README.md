@@ -1,6 +1,6 @@
 # Ji_Feng — A small world
 
-[在线预览](https://jialep38-png.github.io/my-world-blog-redesign-preview/?v=4)
+[在线预览](https://jialep38-png.github.io/my-world-blog-redesign-preview/?v=4.1)
 
 个人博客的第四版独立设计预览。纸色与深绿作为阅读底色，赤陶色用于开场，橙色贯穿导航、索引与三层翻页。原站 [2006038.xyz](https://2006038.xyz/) 与原仓库部署保持不变。
 
