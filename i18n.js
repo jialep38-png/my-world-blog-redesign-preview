@@ -93,7 +93,7 @@
     ['a[href="#reading-order"]', '02 / 给内容找个位置'],
     ['a[href="#reading-process"]', '03 / 把过程留下来'],
     ['.reading-prose>.text-link', '阅读全文 <span>↗</span>'],
-    ['.preview-note', '设计预览 <span>04</span>'],
+    ['.preview-note', '设计预览 <span>05</span>'],
   ].map(([selector, zh]) => {
     const el = document.querySelector(selector);
     return { el, zh, en: el?.innerHTML };

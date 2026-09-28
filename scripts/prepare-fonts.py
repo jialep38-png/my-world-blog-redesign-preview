@@ -29,7 +29,7 @@ def fetch(url: str) -> bytes:
 
 def main() -> None:
     source = "".join((ROOT / name).read_text(encoding="utf-8")
-                     for name in ("index.html", "motion.js", "i18n.js"))
+                     for name in ("index.html", "motion.js", "i18n.js", "scroll-scenes.js"))
     glyphs = "".join(sorted(set(string.printable.strip() + " " + "".join(
         character for character in source if ord(character) > 127
     ))))
@@ -61,7 +61,7 @@ def main() -> None:
         rules.append(
             "@font-face {\n"
             f'  font-family: "{family}";\n'
-            f'  src: url("{filename}.woff2?v=4.1") format("woff2");\n'
+            f'  src: url("{filename}.woff2?v=5") format("woff2");\n'
             f"  font-style: {style};\n"
             f"  font-weight: {weight};\n"
             "  font-display: swap;\n"

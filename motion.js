@@ -26,7 +26,10 @@
     ['Opportunity radar','每日需求与产品机会雷达','2026.05.12','notes','daily-opportunity-radar-2026-05-12','每日需求与产品机会雷达｜2026-05-12 个性化修正版'],
     ['Reconnecting the blog','把博客重新接上线','2026.05.10','building','reconnect-blog-content-notes','把博客重新接上线：一次内容整理小记'],
     ['From ideas to small systems','把零散想法做成小系统','2026.05.10','building','spring-2026-systems-recap','三月底到五月初：把零散想法做成可运行的小系统'],
-    ['Working with AI, thoughtfully','与 AI 协作：从调研到交付','2026.03.03','notes','ai-collaboration-engineering-workflow-note','AI 协作开发学习笔记：从调研到交付的工作流']
+    ['A stable home for content','给内容一个稳定的位置','2026.05.10','notes','astro-blog-content-structure-note','给 Astro 博客内容加一层稳定结构'],
+    ['When an agent goes quiet','当智能体没有回复','2026.05.09','notes','genericagent-wechat-reliability','GenericAgent 微信入口的可靠性，比功能更先重要'],
+    ['Working with AI, thoughtfully','与 AI 协作：从调研到交付','2026.03.03','notes','ai-collaboration-engineering-workflow-note','AI 协作开发学习笔记：从调研到交付的工作流'],
+    ['Answers with evidence','让答案带上证据','2026.03.03','notes','narrarc-agentic-rag-architecture-note','narrarc 学习笔记：证据化 Agentic RAG 的架构拆解']
   ];
   const asset=slug=>`assets/planets/${slug}/cover.webp`;
   const anim=(el,frames,options)=>el.animate(frames,{fill:'both',...options});
@@ -59,7 +62,7 @@
   function applyFilter(announce=false){
     $$('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===filter)));
     let count=0;$$('.journal-full .journal-row').forEach(row=>{row.hidden=filter!=='all'&&row.dataset.type!==filter;if(!row.hidden)count++;});
-    $('[data-entry-count]').textContent=`0${count} ${T('ENTRIES','篇')}`;
+    $('[data-entry-count]').textContent=`${String(count).padStart(2,'0')} ${T('ENTRIES','篇')}`;
     if(announce)$('#route-status').textContent=T(`${count} journal entries shown`,`已显示 ${count} 篇随笔`);
   }
   $$('[data-filter]').forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;applyFilter(true);}));
@@ -130,7 +133,7 @@
 
   function clearTrail(){$$('.trail-image').forEach(img=>img.remove());}
   function closeMenu(focus=false){
-    menu.getAnimations({subtree:true}).forEach(a=>a.cancel());menu.hidden=true;menuButton.setAttribute('aria-expanded','false');body.classList.remove('menu-open');main.inert=false;if(focus)menuButton.focus();
+    menu.getAnimations({subtree:true}).forEach(a=>a.cancel());menu.hidden=true;menuButton.setAttribute('aria-expanded','false');body.classList.remove('menu-open');main.inert=switching||introBusy;if(focus)menuButton.focus();
   }
   menuButton.addEventListener('click',()=>{
     if(!menu.hidden){closeMenu(true);return;}
@@ -158,9 +161,9 @@
     $('#route-status').textContent=T(...titles[name]);
   }
   const pageAnimations=[];
-  async function turnPages(name,cover){
+  async function turnPages(name,cover,label){
     wipe.classList.add('active');wipe.style.setProperty('--turn-color',colors[name]);wipe.style.setProperty('--turn-ink',name==='planets'?'#eeeae2':'#292b27');
-    $('.turn-label strong').textContent=T(...titles[name]);$('.turn-label small').textContent=`0${Object.keys(titles).indexOf(name)}`;
+    $('.turn-label strong').textContent=label||T(...titles[name]);$('.turn-label small').textContent=`0${Object.keys(titles).indexOf(name)}`;
     const sheets=$$('.turn-sheet');
     const jobs=sheets.map((sheet,i)=>{
       const frames=cover?[{transform:'translate3d(0,115%,0) rotate(-8deg) rotateX(-12deg)'},{transform:'translate3d(0,0,0) rotate(0deg) rotateX(0deg)'}]:[{transform:'translate3d(0,0,0) rotate(0deg) rotateX(0deg)'},{transform:'translate3d(0,-115%,0) rotate(7deg) rotateX(10deg)'}];
@@ -177,7 +180,7 @@
       setView(name);
       if(name==='home')revealStarted=performance.now();
       if(!reduced.matches){revealPage(name,300);await turnPages(name,false);}
-      main.focus({preventScroll:true});
+      main.inert=false;main.focus({preventScroll:true});
       if(current==='reading'&&location.hash.startsWith('#reading-'))$(location.hash)?.scrollIntoView({behavior:'instant'});
     }finally{
       pageAnimations.splice(0).forEach(a=>a.cancel());wipe.classList.remove('active');switching=false;main.inert=false;
@@ -186,8 +189,25 @@
   }
   addEventListener('hashchange',()=>{const name=routeName();if(name)navigate(name);});
   document.addEventListener('click',event=>{const route=event.target.closest('a[href^="#/"]');if(route&&!event.metaKey&&!event.ctrlKey&&!event.shiftKey&&!event.altKey){closeMenu();if(route.hash===location.hash){event.preventDefault();navigate(route.hash.slice(2));}}});
-  $$('[data-scroll]').forEach(a=>a.addEventListener('click',event=>{event.preventDefault();$(a.hash).scrollIntoView({behavior:reduced.matches?'instant':'smooth'});}));
-  $('[data-top]').addEventListener('click',()=>window.scrollTo({top:0,behavior:reduced.matches?'instant':'smooth'}));
+  async function turnToElement(target,label){
+    if(!target||switching||introBusy)return;
+    closeMenu();switching=true;main.inert=true;clearTrail();
+    const name=current;
+    try{
+      if(!reduced.matches)await turnPages(name,true,label);
+      let top=0,el=target;while(el){top+=el.offsetTop;el=el.offsetParent;}
+      window.scrollTo({top,behavior:'instant'});measure();paintScroll();
+      if(!reduced.matches){titleReveal($('h1,h2',target),280);await turnPages(name,false,label);}
+      main.inert=false;target.setAttribute('tabindex','-1');target.focus({preventScroll:true});
+      $('#route-status').textContent=label||T('Chapter opened','已打开章节');
+    }finally{
+      pageAnimations.splice(0).forEach(a=>a.cancel());wipe.classList.remove('active');switching=false;main.inert=false;
+      if(queued&&queued!==current){const next=queued;queued=null;navigate(next);}else queued=null;
+    }
+  }
+  window.JournalMotion={turnToElement};
+  $$('[data-scroll]').forEach(a=>a.addEventListener('click',event=>{event.preventDefault();turnToElement($(a.hash),T('Journal','随笔'));}));
+  $('[data-top]').addEventListener('click',()=>turnToElement($('#start'),T('Opening','开场')));
 
   // AVA's media-ready gate, progress line, exponential count, upward exit.
   async function playIntro(){
@@ -208,6 +228,7 @@
   const dust=window.createJournalParticles($('#particle-field'));
   const threads=[];for(let i=0;i<22;i++){const path=document.createElementNS('http://www.w3.org/2000/svg','path');$('.thread-field').append(path);threads.push(path);}
   function measure(){
+    window.JournalScenes?.measure();
     const motion=wide.matches&&!reduced.matches;root.classList.toggle('motion-ready',motion);
     $('.object-caption').textContent=wide.matches&&fine.matches?T('MOVE TO CHANGE PERSPECTIVE','移动鼠标，换一个角度'):T('SCROLL TO CHANGE PERSPECTIVE','向下，换个角度');
     const top=el=>el.getBoundingClientRect().top+scrollY,h=innerHeight;
@@ -217,6 +238,7 @@
   }
   $$('[data-chapter]').forEach(button=>button.addEventListener('click',()=>window.scrollTo({top:metrics.workTop+metrics.workRange*Number(button.dataset.chapter),behavior:reduced.matches?'instant':'smooth'})));
   function paintScroll(){
+    window.JournalScenes?.paint();
     if(current==='reading'){const range=root.scrollHeight-innerHeight;$('.reading-progress i').style.transform=`scaleX(${range>0?clamp(scrollY/range):1})`;}
     if(current!=='home')return;
     if(metrics.motion){
@@ -252,6 +274,7 @@
     const now=performance.now(),dx=event.clientX-lastPoint.x,dy=event.clientY-lastPoint.y;if(now-lastTrail<115||Math.hypot(dx,dy)<75)return;
     lastTrail=now;lastPoint={x:event.clientX,y:event.clientY};const img=new Image();img.src=asset(planets[trailIndex++%5][0]);img.alt='';img.className='trail-image';img.style.left=`${event.clientX}px`;img.style.top=`${event.clientY}px`;img.style.setProperty('--rotate',`${(trailIndex%5-2)*7}deg`);img.style.setProperty('--dx',`${-dx*.25}px`);img.style.setProperty('--dy',`${-dy*.25}px`);body.append(img);setTimeout(()=>img.remove(),1200);const all=$$('.trail-image');if(all.length>5)all[0].remove();
   },{passive:true});
+  addEventListener('layoutchange',measure);
   addEventListener('scroll',()=>{dirty=true;clearTrail();},{passive:true});addEventListener('resize',measure,{passive:true});wide.addEventListener('change',measure);
   reduced.addEventListener('change',()=>{if(reduced.matches){intro.getAnimations().forEach(a=>a.finish());pageAnimations.forEach(a=>{try{a.finish();}catch{}});$$('.reveal-char').forEach(el=>el.getAnimations().forEach(a=>a.cancel()));}clearTrail();targetPointer={x:0,y:0};measure();});
   addEventListener('languagechange',()=>{dynamicCopy();observeTitles();measure();$('#route-status').textContent=T('Language changed to English','已切换为中文');document.fonts.ready.then(measure);});
