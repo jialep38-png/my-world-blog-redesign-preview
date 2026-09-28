@@ -1,5 +1,7 @@
 # Motion study 04
 
+V6 adds an original editorial composition, focus/pointer-driven paper previews and continuous article navigation. It retains the four source studies below, shortens page-turn and intro timing, and reduces spacer scroll distances. The new layout does not claim any award or copied brand identity.
+
 V5 adds original chapter composition on top of this motion study: a pinned opening with an overlapping journal sheet, previous/next chapter navigation, scroll-triggered reading entrances and a three-note technical folio. The folio is pinned only at widths above 800px and heights of at least 800px; smaller viewports keep direct tab controls. Native wheel and touch scrolling remain available.
 
 This independent preview uses Ji_Feng's own writing and collection. The four supplied local reference projects inform its motion. This is an adaptation, not a complete copy of those sites.

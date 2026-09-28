@@ -109,11 +109,11 @@
   function measure(){
     root.classList.add('scene-ready');
     root.style.setProperty('--hero-height',`${$('.hero').offsetHeight}px`);
-    const pinned=wide.matches&&innerHeight>=800&&!reduced.matches;
+    const pinned=innerWidth>=1100&&innerHeight>=900&&!reduced.matches;
     root.classList.toggle('systems-pinned',pinned);
     tabs.setAttribute('aria-orientation',wide.matches?'vertical':'horizontal');
     $('.systems-bottom>span:first-child').textContent=pinned?T('SCROLL TO TURN · OR CHOOSE A NOTE','滚动翻阅 · 也可直接选择'):T('CHOOSE A NOTE · OPEN A STEP','选择笔记 · 点开流程');
-    metrics={pinned,h:innerHeight,heroHeight:$('.hero').offsetHeight,journalTop:absoluteTop($('#journal')),systemTop:absoluteTop(systems),systemRange:Math.max(1,systems.offsetHeight-$('.systems-sticky').offsetHeight),footerTop:absoluteTop($('#end-note')),chapters:chapters.map(([s])=>absoluteTop($(s))),reading:$$('.reading-prose h2').map(el=>({el,top:absoluteTop(el)}))};
+    metrics={pinned,h:innerHeight,heroHeight:$('.hero').offsetHeight,journalTop:absoluteTop($('#journal')),journalHeight:$('#journal').offsetHeight,systemTop:absoluteTop(systems),systemRange:Math.max(1,systems.offsetHeight-$('.systems-sticky').offsetHeight),footerTop:absoluteTop($('#end-note')),chapters:chapters.map(([s])=>absoluteTop($(s))),reading:$$('.reading-prose h2,.reading-prose h3').map(el=>({el,top:absoluteTop(el)}))};
     lastAuto=-1;
   }
   function updateDock(){
@@ -129,7 +129,7 @@
     if(document.body.dataset.view==='reading'){
       let active=metrics.reading?.[0]?.el;
       metrics.reading?.forEach(({el,top})=>{if(scrollY+innerHeight*.3>=top)active=el;});
-      $$('.reading-grid aside a').forEach(a=>{if(active&&a.hash===`#${active.id}`)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
+      $$('.reading-grid aside a').forEach(a=>{if(active&&(a.dataset.readingAnchor===active.id||a.hash===`#${active.id}`))a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
     }
     if(document.body.dataset.view!=='home')return;
     if(!metrics.chapters)return;
@@ -139,18 +139,23 @@
     dock.dataset.hidden=String(hide);dock.inert=hide;
     dock.style.setProperty('--chapter-progress',clamp(scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight)));
     const p=clamp(scrollY/Math.max(1,metrics.heroHeight));
-    if(metrics.pinned){
+    if(wide.matches&&!reduced.matches){
       $('.hero').style.transform=`scale(${1-p*.055}) translateY(${-p*12}px)`;
       const entry=clamp((innerHeight-(metrics.journalTop-scrollY))/innerHeight);
-      $('#journal').style.transform=`perspective(1600px) rotateX(${(1-entry)*4}deg)`;
+      const angle=(1-entry)*4,fit=1-Math.sin(angle*Math.PI/180)*metrics.journalHeight/1600;
+      $('#journal').style.transform=`perspective(1600px) rotateX(${angle}deg) scaleX(${fit})`;
       $('#journal').style.setProperty('--page-radius',`${(1-entry)*26}px`);
       $('#journal').style.setProperty('--edge-progress',String(clamp(entry*1.4)));
+    }else{
+      $('.hero').style.transform='';$('#journal').style.transform='';
+    }
+    if(metrics.pinned){
       const progress=clamp((scrollY-metrics.systemTop)/metrics.systemRange);
       systems.style.setProperty('--system-progress',progress);
       const auto=Math.min(2,Math.floor(progress*3));
       if(!ignoreAuto&&scrollY>=metrics.systemTop-innerHeight*.1&&scrollY<=metrics.systemTop+metrics.systemRange+innerHeight*.3&&auto!==lastAuto){lastAuto=auto;selectNote(auto);}
     }else{
-      $('.hero').style.transform='';$('#journal').style.transform='';systems.style.setProperty('--system-progress',String(selected/2));
+      systems.style.setProperty('--system-progress',String(selected/2));
     }
   }
   const entrances=new WeakMap();
@@ -168,6 +173,7 @@
   reduced.addEventListener('change',()=>{if(reduced.matches){animations.forEach(a=>a.cancel());animations.clear();panels.forEach((panel,i)=>panel.hidden=i!==selected);}measure();paint();});
   wide.addEventListener('change',measure);
   addEventListener('languagechange',render);
+  addEventListener('contentchange',()=>{entranceObserver.disconnect();prepareEntrances();measure();});
   window.JournalScenes={measure,paint};
   render();
 })();

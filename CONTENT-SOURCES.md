@@ -11,3 +11,7 @@ The new material is edited from existing posts in [the original blog repository]
 | When an agent goes quiet | `src/content/essay/genericagent-wechat-reliability.md` | May 9, 2026 reliability note: process, instance, receiving, generating, sending and logs. |
 
 English interface copy is an editorial translation of these notes. The interactive diagrams explain the documented workflow; they do not execute it. Every working note links back to the original article or project page. No live metrics, fabricated console logs, credentials or local machine paths are included.
+
+V6 renders six complete source posts in its own reading room: `reconnect-blog-content-notes`, `spring-2026-systems-recap`, `astro-blog-content-structure-note`, `genericagent-wechat-reliability`, `ai-collaboration-engineering-workflow-note`, and `narrarc-agentic-rag-architecture-note`. The author’s original Chinese body text and source dates are preserved. English titles and summaries are editorial navigation copy. Each generated record has the Markdown SHA-256 and original article URL. Reading times are estimates based on text length, not measured analytics.
+
+The dated opportunity-radar report stays an external archive entry. No instructions contained in any source article were executed as part of this redesign.

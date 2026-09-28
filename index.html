@@ -9,17 +9,20 @@
   <meta name="description" content="Ji_Feng. Notes, things in progress, and a small collection of little worlds.">
   <title>Ji_Feng — A small world</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='10' width='12' height='12' fill='%23c66345'/%3E%3C/svg%3E">
-  <link rel="preload" href="fonts/manrope.woff2?v=5" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/instrument-serif.woff2?v=5" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=5">
-  <link rel="stylesheet" href="style.css?v=5">
-  <link rel="stylesheet" href="motion-v4.css?v=5">
-  <link rel="stylesheet" href="scroll-scenes.css?v=5">
-  <script src="art.js?v=5" defer></script>
-  <script src="particles.js?v=5" defer></script>
-  <script src="i18n.js?v=5" defer></script>
-  <script src="motion.js?v=5" defer></script>
-  <script src="scroll-scenes.js?v=5" defer></script>
+  <link rel="preload" href="fonts/manrope.woff2?v=6" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/instrument-serif.woff2?v=6" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts/fonts.css?v=6">
+  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="motion-v4.css?v=6">
+  <link rel="stylesheet" href="scroll-scenes.css?v=6">
+  <link rel="stylesheet" href="editorial.css?v=6">
+  <script src="art.js?v=6" defer></script>
+  <script src="particles.js?v=6" defer></script>
+  <script src="i18n.js?v=6" defer></script>
+  <script src="reading-data.js?v=6" defer></script>
+  <script src="reading.js?v=6" defer></script>
+  <script src="motion.js?v=6" defer></script>
+  <script src="scroll-scenes.js?v=6" defer></script>
 </head>
 <body data-view="home">
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -35,9 +38,9 @@
   <main id="main-content" tabindex="-1">
     <div data-page="home" class="view">
       <div class="hero-chapter" id="start"><section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy"><p class="meta"><i class="square"></i> THE PERSONAL SPACE OF JI_FENG</p><h1 id="hero-title">A small<br><em>world.</em></h1><p class="hero-description">Notes on things I make,<br>learn, and keep.</p><a href="#journal" class="text-link" data-scroll>Take a look <span>↘</span></a></div>
-        <div class="hero-object" aria-hidden="true"><span class="object-coordinate meta">FIG. 01 — CONTINUITY</span><div class="hero-orbit"></div><div class="object-shadow"></div><svg class="object-fallback" viewBox="0 0 600 600"><defs><linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d0d2c8"/><stop offset=".35" stop-color="#515951"/><stop offset=".62" stop-color="#b7bbab"/><stop offset="1" stop-color="#363d35"/></linearGradient></defs><path d="M330 117c140 0 188 290 33 335C179 501 90 203 228 142c95-42 211 171 80 226-97 41-193-90-105-170" fill="none" stroke="url(#ribbon)" stroke-width="50"/><path d="M330 117c140 0 188 290 33 335" fill="none" stroke="#e2e3d7" stroke-width="2"/></svg><canvas id="sculpture"></canvas><span class="object-caption meta">MOVE TO CHANGE PERSPECTIVE</span></div>
-        <div class="hero-foot"><span class="meta" lang="zh-CN">霁风的小圈</span><a href="#journal" data-scroll class="meta">SCROLL TO EXPLORE <span>↓</span></a><span class="meta">INDEPENDENT / ALWAYS IN PROGRESS</span></div>
+        <div class="hero-copy"><p class="meta"><i class="square"></i> THE PERSONAL SPACE OF JI_FENG</p><h1 id="hero-title"><span class="hero-line">A small</span><em class="hero-line">world.</em></h1><p class="hero-description">Notes on things I make,<br>learn, and keep.</p><a href="#journal" class="text-link" data-scroll>Take a look <span>↘</span></a></div>
+        <div class="hero-object" aria-hidden="true"><span class="object-coordinate meta">ONE CONTINUOUS THOUGHT</span><div class="hero-orbit"></div><div class="object-shadow"></div><svg class="object-fallback" viewBox="0 0 600 600"><defs><linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d0d2c8"/><stop offset=".35" stop-color="#515951"/><stop offset=".62" stop-color="#b7bbab"/><stop offset="1" stop-color="#363d35"/></linearGradient></defs><path d="M330 117c140 0 188 290 33 335C179 501 90 203 228 142c95-42 211 171 80 226-97 41-193-90-105-170" fill="none" stroke="url(#ribbon)" stroke-width="50"/><path d="M330 117c140 0 188 290 33 335" fill="none" stroke="#e2e3d7" stroke-width="2"/></svg><canvas id="sculpture"></canvas><span class="object-caption meta">MOVE TO CHANGE PERSPECTIVE</span></div>
+        <div class="hero-foot"><span class="meta" lang="zh-CN">霁风的小圈</span><a href="#journal" data-scroll class="meta">OPEN THE NOTEBOOK <span>↓</span></a><span class="meta">INDEPENDENT / ALWAYS IN PROGRESS</span></div>
       </section></div>
       <section id="journal" class="home-journal section-pad" aria-labelledby="journal-title"><i class="chapter-edge" aria-hidden="true"></i><div class="section-top"><span class="meta">01 / JOURNAL</span><a href="#/essay" class="quiet-link">All entries <span>↗</span></a></div><div class="journal-layout"><div class="section-copy"><h2 id="journal-title">Thinking<br><em>out loud.</em></h2><p>A few notes along the way.</p></div><div class="journal-rows" data-journal="home"></div></div></section>
       <section id="work" class="work-journey" aria-label="Selected work"><div class="work-sticky"><div class="work-top"><span class="meta">02 / SELECTED WORK</span><a href="#/projects" class="quiet-link">All projects <span>↗</span></a></div><div class="work-index"><span class="index-label meta">EXPLORATIONS</span><div class="index-buttons"><i class="index-marker" aria-hidden="true"></i><button data-chapter="0" aria-pressed="true" aria-label="Project 01, arXiv Reader">01</button><button data-chapter="1" aria-pressed="false" aria-label="Project 02, Webcoding">02</button></div></div><div class="work-window"><div class="work-track">
@@ -55,6 +58,6 @@
     <div data-page="planets" class="view collection-view" hidden><header class="collection-heading"><span class="meta">03 / OBJECTS & MEMORIES</span><h1>Little <em>worlds.</em></h1><p>Five songs, in another form.</p></header><div class="collection-room"><div class="collection-selector" aria-label="Choose an object"></div><figure class="selected-object"><div class="selected-image"><img src="assets/planets/yesterday-today/cover.webp" width="1600" height="1600" alt="昨天，今天 — 小星球"></div><figcaption><span data-object-description lang="zh-CN">想靠近的距离，也被温柔地保存。</span><a data-object-link href="https://2006038.xyz/planets/yesterday-today/">Open 3D view ↗</a></figcaption></figure></div><div class="collection-end meta"><span>COLLECTED WITH CARE.</span><span>01 — 05</span></div></div>
     <div data-page="about" class="view inner-view about-view" hidden><header class="page-heading"><span class="meta">04 / A LITTLE CONTEXT</span><h1>Hello,<br><em>I'm Ji_Feng.</em></h1></header><div class="about-body"><div class="about-mark" aria-hidden="true"><svg viewBox="0 0 300 300"><ellipse cx="150" cy="150" rx="124" ry="64" transform="rotate(-36 150 150)"/><path d="M125 23C240 58 263 240 177 270"/><rect x="245" y="66" width="12" height="12"/></svg></div><div class="about-text"><p>A little corner of the internet<br>for things I make, learn, and keep.</p><p>Some entries are finished thoughts.<br>Others are simply a place to begin.</p><p lang="zh-CN" class="about-chinese">写一些字，做一些东西。<br>这里是霁风的小圈。</p><div class="about-links"><a href="https://github.com/jialep38-png">GitHub ↗</a><a href="https://2006038.xyz/about/">More about me ↗</a><a href="https://2006038.xyz/rss.xml">RSS ↗</a></div></div></div><div class="inner-footer"><span class="meta">TAKE YOUR TIME.</span><a href="#/essay" class="text-link">Read the journal <span>↗</span></a></div></div>
     <div data-page="reading" class="view reading-view" hidden><div class="reading-progress" aria-hidden="true"><i></i></div><header class="reading-header"><a href="#/essay" class="quiet-link">← Journal</a><div class="meta">MAY 10, 2026 / BUILDING</div><h1>Reconnecting<br><em>the blog.</em></h1><p lang="zh-CN">把博客重新接上线：一次内容整理小记</p></header><div class="reading-grid"><aside aria-label="On this page"><span class="meta">ON THIS PAGE</span><a href="#reading-open">01 / Begin again</a><a href="#reading-order">02 / Find a place</a><a href="#reading-process">03 / Keep the process</a></aside><article class="reading-prose" lang="zh-CN"><h2 id="reading-open">先把入口打开</h2><p>这次重新整理博客，目标其实很简单：先让它重新变成一个可以持续写东西的地方。</p><p>过去一段时间，很多想法都散在不同位置。有些在临时笔记里，有些在项目目录里，有些只停留在聊天框和脑子里。它们不是没有价值，只是没有被放到一个以后还能找回来的地方。</p><p>博客断开的时间越久，重新开始时就越容易想“一次性修好所有东西”。但这通常会变成新的拖延。所以这次我给自己的要求很克制：不追求完整重构，先恢复内容流动。</p><h2 id="reading-order">重新分一下内容位置</h2><p>目前这个小圈里，内容大概分成几类：</p><ul><li>essay：放随想、阶段复盘和稍微完整一点的技术观察；</li><li>projects：放具体项目、工具流和构建过程；</li><li>memo：放短记录，不要求成文，但要留下当天上下文；</li><li>archive：把历史内容串起来，方便之后回看。</li></ul><p>这个分法不复杂，但它对我有用。写之前先判断内容属于哪里，就不用每次重新设计文章形态。</p><h2 id="reading-process">不把博客写成展览柜</h2><p>我不太想把这里变成一个纯成果展示页。个人博客更适合保留过程感：哪里卡住了，为什么调整，哪些决定只是当时的选择。</p><p>很多技术工作真正有价值的部分，并不只在最终版本里，而在那些中间判断里。</p><blockquote>博客不一定要很宏大。它可以只是一个稳定的工作台：放下想法，整理路径，给未来的自己留一盏灯。</blockquote><a class="text-link" href="https://2006038.xyz/archive/reconnect-blog-content-notes/">Continue to original <span>↗</span></a></article></div></div>
-  </main><div class="preview-note">DESIGN STUDY <span>05</span></div><div class="sr-only" id="route-status" role="status" aria-live="polite"></div>
+  </main><div class="preview-note">DESIGN STUDY <span>06</span></div><div class="sr-only" id="route-status" role="status" aria-live="polite"></div>
 </body>
 </html>

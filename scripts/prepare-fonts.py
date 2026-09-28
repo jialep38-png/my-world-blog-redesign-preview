@@ -29,7 +29,7 @@ def fetch(url: str) -> bytes:
 
 def main() -> None:
     source = "".join((ROOT / name).read_text(encoding="utf-8")
-                     for name in ("index.html", "motion.js", "i18n.js", "scroll-scenes.js"))
+                     for name in ("index.html", "motion.js", "i18n.js", "scroll-scenes.js", "reading.js", "reading-data.js"))
     glyphs = "".join(sorted(set(string.printable.strip() + " " + "".join(
         character for character in source if ord(character) > 127
     ))))
@@ -44,7 +44,15 @@ def main() -> None:
     FONTS.mkdir(exist_ok=True)
     rules = []
     manifest = []
+    # Keep text-subsetting requests bounded. unicode-range loads only the pieces
+    # needed by the current page instead of every archived article at startup.
+    chunks = []
     for query, filename, family, style, weight, directory, text in specs:
+        for index, start in enumerate(range(0, len(text), 650)):
+            part = text[start:start+650]
+            name = filename if index == 0 else f'{filename}-{index+1}'
+            chunks.append((query, name, family, style, weight, directory, part))
+    for query, filename, family, style, weight, directory, text in chunks:
         url = "https://fonts.googleapis.com/css2?" + urlencode({
             "family": query, "display": "swap", "text": text
         })
@@ -61,10 +69,11 @@ def main() -> None:
         rules.append(
             "@font-face {\n"
             f'  font-family: "{family}";\n'
-            f'  src: url("{filename}.woff2?v=5") format("woff2");\n'
+            f'  src: url("{filename}.woff2?v=6") format("woff2");\n'
             f"  font-style: {style};\n"
             f"  font-weight: {weight};\n"
             "  font-display: swap;\n"
+            + (f"  unicode-range: {','.join(f'U+{ord(c):X}' for c in text)};\n" if family.startswith('Noto') else '') +
             "}\n"
         )
         manifest.append({"family": family, "style": style, "weight": weight,

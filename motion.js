@@ -10,11 +10,12 @@
   const body=document.body,root=document.documentElement,pages=$$('[data-page]');
   const hero=$('.hero'),journey=$('.work-journey'),track=$('.work-track'),slides=$$('.work-slide'),bridge=$('.bridge'),cloud=$('.constellation');
   const menu=$('#site-menu'),menuButton=$('.menu-toggle'),main=$('#main-content'),wipe=$('.page-wipe'),intro=$('.intro');
-  const titles={home:['A small world','一方小世界'],essay:['Journal','随笔'],projects:['Selected work','作品'],planets:['Little worlds','收藏'],about:['About','关于'],reading:['Reconnecting','重新接上线']};
+  const titles={home:['A small world','一方小世界'],essay:['Journal','随笔'],projects:['Selected work','作品'],planets:['Little worlds','收藏'],about:['About','关于'],reading:['Reading','阅读笔记']};
   const colors={home:'#eeeae2',essay:'#eeece6',projects:'#dce0d7',planets:'#28332e',about:'#dfded5',reading:'#eeece6'};
   let current='home',switching=false,queued=null,introBusy=false,metrics={},activeChapter=-1,dirty=true,lastY=-1;
   let heroVisible=true,cloudVisible=false,raf=0,lastFrame=0,staticPainted=false,revealStarted=-10000;
   let pointer={x:0,y:0},targetPointer={x:0,y:0},selectedObject=0,filter='all';
+  const savedScroll=new Map();
   const planets=[
     ['yesterday-today','昨天，今天','Yesterday, today','想靠近的距离，也被温柔地保存。','A little distance, gently kept.'],
     ['crossover','删了一百遍','Deleted a hundred times','删去的瞬间，在下一张里回来。','An erased moment returns in the next frame.'],
@@ -52,10 +53,11 @@
   $('.work-counter').insertAdjacentHTML('beforeend','<small>/ 02</small>');
 
   $$('[data-journal]').forEach(list=>{
-    const selected=list.dataset.journal==='home'?entries.slice(0,3):entries;
-    selected.forEach(([,native,date,type,slug],i)=>{
-      const link=document.createElement('a');link.className='journal-row';link.dataset.type=type;link.dataset.entry=String(i);
-      link.href=slug==='reconnect-blog-content-notes'?'#/reading':`https://2006038.xyz/archive/${slug}/`;
+    const selected=list.dataset.journal==='home'?[entries[1],entries[6],entries[4]]:entries;
+    selected.forEach(entry=>{
+      const [,native,date,type,slug]=entry;
+      const link=document.createElement('a');link.className='journal-row';link.dataset.type=type;link.dataset.entry=String(entries.indexOf(entry));
+      link.href=window.JournalPosts.some(p=>p.slug===slug)?`#/reading/${slug}`:`https://2006038.xyz/archive/${slug}/`;
       link.innerHTML=`<div><div class="row-meta"><span>${date}</span><span data-entry-type></span></div><h3></h3><p class="native-title" lang="zh-CN">${native}</p></div><span class="row-arrow" aria-hidden="true">↗</span>`;list.append(link);
     });
   });
@@ -100,7 +102,7 @@
     $$('.main-nav a').forEach(a=>{const label=a.textContent;a.replaceChildren();const span=document.createElement('span');span.className='nav-label';span.textContent=label;span.dataset.label=label;a.append(span);});
     document.title=`${T('Ji_Feng','霁风')} — ${T(...titles[current])}`;
     $('.cloud-stage').textContent=T('A form of remembering.','记忆的形状。');
-    objectCopy();applyFilter();dirty=true;
+    objectCopy();applyFilter();if(current==='reading')window.JournalReader?.sync();dirty=true;
   }
 
   // Bürocratik's character staggering, adapted to semantic native DOM and WAAPI.
@@ -153,9 +155,10 @@
       if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
     }
   });
-  function routeName(){if(location.hash.startsWith('#reading-'))return 'reading';const name=location.hash.replace(/^#\//,'');return Object.hasOwn(titles,name)?name:null;}
+  function routeName(){if(location.hash.startsWith('#reading-')||location.hash.startsWith('#/reading/'))return 'reading';const name=location.hash.replace(/^#\//,'');return Object.hasOwn(titles,name)?name:null;}
   function setView(name){
     current=name;pages.forEach(p=>p.hidden=p.dataset.page!==name);body.dataset.view=name;
+    if(name==='reading')window.JournalReader.render();
     $$('[data-route]').forEach(a=>{if(a.dataset.route===(name==='reading'?'essay':name))a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
     $('meta[name="theme-color"]').content=colors[name];window.scrollTo({top:0,behavior:'instant'});dynamicCopy();measure();
     $('#route-status').textContent=T(...titles[name]);
@@ -167,28 +170,31 @@
     const sheets=$$('.turn-sheet');
     const jobs=sheets.map((sheet,i)=>{
       const frames=cover?[{transform:'translate3d(0,115%,0) rotate(-8deg) rotateX(-12deg)'},{transform:'translate3d(0,0,0) rotate(0deg) rotateX(0deg)'}]:[{transform:'translate3d(0,0,0) rotate(0deg) rotateX(0deg)'},{transform:'translate3d(0,-115%,0) rotate(7deg) rotateX(10deg)'}];
-      const a=anim(sheet,frames,{duration:cover?630:720,delay:cover?i*60:(2-i)*45,easing:cover?'cubic-bezier(.76,0,.24,1)':'cubic-bezier(.65,0,.2,1)'});pageAnimations.push(a);return finished(a);
+      const a=anim(sheet,frames,{duration:cover?470:560,delay:cover?i*40:(2-i)*35,easing:cover?'cubic-bezier(.76,0,.24,1)':'cubic-bezier(.65,0,.2,1)'});pageAnimations.push(a);return finished(a);
     });
     await Promise.all(jobs);
   }
   async function navigate(name){
     if(switching){queued=name;return;}
-    closeMenu();if(current===name){if(location.hash.startsWith('#reading-'))$(location.hash)?.scrollIntoView({behavior:reduced.matches?'instant':'smooth'});else window.scrollTo({top:0,behavior:reduced.matches?'instant':'smooth'});return;}
+    closeMenu();const newArticle=name==='reading'&&window.JournalReader.route().slug!==window.JournalReader.key;
+    if(current===name&&!newArticle){const target=name==='reading'?window.JournalReader.target():null;if(target)target.scrollIntoView({behavior:reduced.matches?'instant':'smooth'});else window.scrollTo({top:0,behavior:reduced.matches?'instant':'smooth'});return;}
+    const restore=current==='reading'&&name!=='reading'?(savedScroll.get(name)||0):0;savedScroll.set(current,scrollY);
     switching=true;clearTrail();main.inert=true;
     try{
       if(!reduced.matches)await turnPages(name,true);
       setView(name);
+      if(restore)window.scrollTo({top:restore,behavior:'instant'});
       if(name==='home')revealStarted=performance.now();
       if(!reduced.matches){revealPage(name,300);await turnPages(name,false);}
       main.inert=false;main.focus({preventScroll:true});
-      if(current==='reading'&&location.hash.startsWith('#reading-'))$(location.hash)?.scrollIntoView({behavior:'instant'});
+      if(current==='reading')window.JournalReader.target()?.scrollIntoView({behavior:'instant'});
     }finally{
       pageAnimations.splice(0).forEach(a=>a.cancel());wipe.classList.remove('active');switching=false;main.inert=false;
-      if(queued&&queued!==current){const next=queued;queued=null;navigate(next);}else queued=null;
+      if(queued&&(queued!==current||(current==='reading'&&window.JournalReader.route().slug!==window.JournalReader.key))){const next=queued;queued=null;navigate(next);}else queued=null;
     }
   }
   addEventListener('hashchange',()=>{const name=routeName();if(name)navigate(name);});
-  document.addEventListener('click',event=>{const route=event.target.closest('a[href^="#/"]');if(route&&!event.metaKey&&!event.ctrlKey&&!event.shiftKey&&!event.altKey){closeMenu();if(route.hash===location.hash){event.preventDefault();navigate(route.hash.slice(2));}}});
+  document.addEventListener('click',event=>{const route=event.target.closest('a[href^="#/"]');if(route&&!event.metaKey&&!event.ctrlKey&&!event.shiftKey&&!event.altKey){closeMenu();if(route.hash===location.hash){event.preventDefault();navigate(routeName());}}});
   async function turnToElement(target,label){
     if(!target||switching||introBusy)return;
     closeMenu();switching=true;main.inert=true;clearTrail();
@@ -202,7 +208,7 @@
       $('#route-status').textContent=label||T('Chapter opened','已打开章节');
     }finally{
       pageAnimations.splice(0).forEach(a=>a.cancel());wipe.classList.remove('active');switching=false;main.inert=false;
-      if(queued&&queued!==current){const next=queued;queued=null;navigate(next);}else queued=null;
+      if(queued&&(queued!==current||(current==='reading'&&window.JournalReader.route().slug!==window.JournalReader.key))){const next=queued;queued=null;navigate(next);}else queued=null;
     }
   }
   window.JournalMotion={turnToElement};
@@ -214,13 +220,13 @@
     closeMenu();if(introBusy||switching||reduced.matches)return;
     introBusy=true;intro.hidden=false;body.classList.add('loading');main.inert=true;$('.site-header').inert=true;introCount(0,true);intro.style.setProperty('--load',0);
     try{
-      await Promise.all([Promise.race([document.fonts.ready,delay(2500)]),new Promise(resolve=>{
-        const start=performance.now();function tick(time){const p=clamp((time-start)/2050),progress=(Math.pow(14,p)-1)/13;introCount(Math.round(progress*100));intro.style.setProperty('--load',progress);if(p<1&&!reduced.matches)requestAnimationFrame(tick);else resolve();}requestAnimationFrame(tick);
+      await Promise.all([Promise.race([document.fonts.ready,delay(1500)]),new Promise(resolve=>{
+        const start=performance.now();function tick(time){const p=clamp((time-start)/1150),progress=(Math.pow(14,p)-1)/13;introCount(Math.round(progress*100));intro.style.setProperty('--load',progress);if(p<1&&!reduced.matches)requestAnimationFrame(tick);else resolve();}requestAnimationFrame(tick);
       })]);
-      introCount(100);intro.style.setProperty('--load',1);await delay(140);
+      introCount(100);intro.style.setProperty('--load',1);await delay(70);
       if(reduced.matches)return;
       revealStarted=performance.now();revealPage(current,200);
-      const a=anim(intro,[{transform:'translateY(0)'},{transform:'translateY(-102%)'}],{duration:1050,easing:'cubic-bezier(.76,0,.24,1)'});await finished(a);a.cancel();
+      const a=anim(intro,[{transform:'translateY(0)'},{transform:'translateY(-102%)'}],{duration:650,easing:'cubic-bezier(.76,0,.24,1)'});await finished(a);a.cancel();
     }finally{intro.hidden=true;introBusy=false;body.classList.remove('loading');main.inert=false;$('.site-header').inert=false;}
   }
   $('[data-replay]').addEventListener('click',playIntro);
@@ -274,13 +280,13 @@
     const now=performance.now(),dx=event.clientX-lastPoint.x,dy=event.clientY-lastPoint.y;if(now-lastTrail<115||Math.hypot(dx,dy)<75)return;
     lastTrail=now;lastPoint={x:event.clientX,y:event.clientY};const img=new Image();img.src=asset(planets[trailIndex++%5][0]);img.alt='';img.className='trail-image';img.style.left=`${event.clientX}px`;img.style.top=`${event.clientY}px`;img.style.setProperty('--rotate',`${(trailIndex%5-2)*7}deg`);img.style.setProperty('--dx',`${-dx*.25}px`);img.style.setProperty('--dy',`${-dy*.25}px`);body.append(img);setTimeout(()=>img.remove(),1200);const all=$$('.trail-image');if(all.length>5)all[0].remove();
   },{passive:true});
-  addEventListener('layoutchange',measure);
+  addEventListener('layoutchange',measure);addEventListener('contentchange',measure);
   addEventListener('scroll',()=>{dirty=true;clearTrail();},{passive:true});addEventListener('resize',measure,{passive:true});wide.addEventListener('change',measure);
   reduced.addEventListener('change',()=>{if(reduced.matches){intro.getAnimations().forEach(a=>a.finish());pageAnimations.forEach(a=>{try{a.finish();}catch{}});$$('.reveal-char').forEach(el=>el.getAnimations().forEach(a=>a.cancel()));}clearTrail();targetPointer={x:0,y:0};measure();});
   addEventListener('languagechange',()=>{dynamicCopy();observeTitles();measure();$('#route-status').textContent=T('Language changed to English','已切换为中文');document.fonts.ready.then(measure);});
   document.fonts.ready.then(measure);document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);raf=0;}else if(!raf){dirty=true;raf=requestAnimationFrame(frame);}});
   setView(routeName()||'home');observeTitles();
-  if(location.hash.startsWith('#reading-'))requestAnimationFrame(()=>$(location.hash)?.scrollIntoView({behavior:'instant'}));
+  if(current==='reading')requestAnimationFrame(()=>window.JournalReader.target()?.scrollIntoView({behavior:'instant'}));
   let seen=false;try{seen=sessionStorage.getItem('ji-feng-study-04')==='seen';sessionStorage.setItem('ji-feng-study-04','seen');}catch{}
   if(!seen)playIntro();else{revealStarted=performance.now()-900;revealPage(current);}
   raf=requestAnimationFrame(frame);
