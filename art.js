@@ -15,7 +15,7 @@
   }
   function createSculpture(canvas) {
     const host = canvas.parentElement;
-    let gl, program, rotation, aspect, count, ready = false;
+    let gl, program, rotation, aspect, count, ready = false, reveal = 1, viewportW = 1, viewportH = 1;
     const vertex = `
       attribute vec3 position; attribute vec3 normal;
       uniform vec3 angles; uniform float aspect;
@@ -42,9 +42,9 @@
         float softbox=pow(max(dot(reflected,normalize(vec3(-.6,1.,.8))),0.),18.);
         float edge=pow(1.-abs(dot(n,v)),3.);
         float band=pow(max(dot(reflected,normalize(vec3(1.,-.2,.5))),0.),8.);
-        vec3 color=vec3(.29,.32,.27)*(.42+diffuse*.72);
-        color+=vec3(.70,.72,.63)*softbox*.9+vec3(.50,.55,.46)*band*.35;
-        color+=vec3(.45,.49,.40)*edge*.4;
+        vec3 color=vec3(.39,.33,.27)*(.40+diffuse*.72);
+        color+=vec3(.97,.88,.73)*softbox*1.3+vec3(.88,.40,.22)*band*.68;
+        color+=vec3(.65,.59,.47)*edge*.45;
         float grain=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453);
         color+=vec3((grain-.5)*.009);
         gl_FragColor=vec4(pow(color,vec3(.88)),1.);
@@ -105,14 +105,19 @@
         const bounds=host.getBoundingClientRect();
         if(!bounds.width || !bounds.height) return;
         const dpr=Math.min(devicePixelRatio||1,1.6);
-        canvas.width=Math.round(bounds.width*dpr);canvas.height=Math.round(bounds.height*dpr);
+        viewportW=Math.round(bounds.width*dpr);viewportH=Math.round(bounds.height*dpr);canvas.width=viewportW;canvas.height=viewportH;
         if(ready) gl.viewport(0,0,canvas.width,canvas.height);
       },
-      paint(time, pointer, reduced) {
+      reveal(value) { reveal=value; },
+      paint(time, pointer, reduced, scrollProgress=0) {
         if(!ready) return;
-        const drift=reduced?0:Math.sin(time*.00018)*.07;
+        const drift=reduced?0:Math.sin(time*.00025)*.12;
+        const pixel=reduced?1:1+Math.pow(1-reveal,3)*23;
+        const w=Math.max(1,Math.round(viewportW/pixel)),h=Math.max(1,Math.round(viewportH/pixel));
+        if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}
+        canvas.style.imageRendering=pixel>2?'pixelated':'auto';
         gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-        gl.uniform3f(rotation,.65+pointer.y*.14, -.42+pointer.x*.24+drift,.32);
+        gl.uniform3f(rotation,.65+pointer.y*.4+scrollProgress*.6, -.42+pointer.x*.65+drift+(1-reveal)*2.2+scrollProgress*1.4,.32+scrollProgress*.2);
         gl.uniform1f(aspect,canvas.width/canvas.height);
         gl.drawElements(gl.TRIANGLES,count,gl.UNSIGNED_SHORT,0);
       }
