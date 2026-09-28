@@ -35,6 +35,8 @@ def main() -> None:
     ))))
     latin = "".join(chr(code) for code in range(32, 127))
     specs = (
+        ("Manrope:wght@400..600", "manrope", "Manrope", "normal", "400 600", "manrope", latin),
+        ("Instrument Serif", "instrument-serif", "Instrument Serif", "normal", "400", "instrumentserif", latin),
         ("Noto Sans SC:wght@300..600", "noto-sans-sc", "Noto Sans SC", "normal", "300 600", "notosanssc", glyphs),
         ("Noto Serif SC:wght@400..600", "noto-serif-sc", "Noto Serif SC", "normal", "400 600", "notoserifsc", glyphs),
         ("Instrument Serif:ital@1", "instrument-serif-italic", "Instrument Serif", "italic", "400", "instrumentserif", latin),
@@ -59,7 +61,7 @@ def main() -> None:
         rules.append(
             "@font-face {\n"
             f'  font-family: "{family}";\n'
-            f'  src: url("{filename}.woff2") format("woff2");\n'
+            f'  src: url("{filename}.woff2?v=3") format("woff2");\n'
             f"  font-style: {style};\n"
             f"  font-weight: {weight};\n"
             "  font-display: swap;\n"
