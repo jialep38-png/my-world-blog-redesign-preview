@@ -8,7 +8,7 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)');
 const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const T=(en,zh)=>lang==='zh'?zh:en;
 let lang='en',view='home',activePost='',filter='all',journalIndex=0,planetIndex=0,busy=false,queuedHash='',homeScroll=0;
-const picks=[posts[0],posts[5],posts[3]];
+const picks=['reconnect-blog-content-notes','narrarc-agentic-rag-architecture-note','genericagent-wechat-reliability'].map(slug=>posts.find(post=>post.slug===slug));
 const planets=[
   {slug:'yesterday-today',en:'Yesterday, today',zh:'昨天，今天'},
   {slug:'crossover',en:'Deleted a hundred times',zh:'删了一百遍'},
@@ -63,13 +63,14 @@ function renderArchive(){
     return `<a class="archive-row" data-type="${entry.type}" href="${href}" ${filter!=='all'&&filter!==entry.type?'hidden':''}><small>${String(index+1).padStart(2,'0')}<br>${entry.date}</small><strong>${title}</strong><span>${T(entry.type.toUpperCase(),entry.type==='building'?'构建':'笔记')}</span><b aria-hidden="true">↗</b></a>`;
   }).join('');
   $$('[data-filter]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.filter===filter)));
+  $('#archive-count').textContent=`${String(archive.length).padStart(2,'0')} ${T('ENTRIES','篇记录')} / 2026`;
 }
 
 function renderArticle(slug){
   const post=posts.find(item=>item.slug===slug)||posts[0];if(!post)return;
   activePost=post.slug;
   const index=posts.indexOf(post);
-  const tones=['pink','green','blue','pink','orange','green'];
+  const tones=['pink','green','blue','pink','orange','green','blue','pink','green','orange'];
   $('#reader-view').dataset.tone=tones[index];document.body.dataset.color=tones[index];
   $('#reader-overline').textContent=`${String(index+1).padStart(2,'0')} / ${String(posts.length).padStart(2,'0')} · ${T('READING','阅读')}`;
   $('#reader-meta').innerHTML=`<span>${post.date.replaceAll('-','.')} / ${T(post.type.toUpperCase(),post.type==='building'?'构建':'笔记')}</span><span>${T(`ABOUT ${post.minutes} MIN · ORIGINAL IN CHINESE`,`约 ${post.minutes} 分钟 · 中文原文`)}</span>`;

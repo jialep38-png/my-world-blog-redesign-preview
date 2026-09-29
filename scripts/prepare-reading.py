@@ -17,8 +17,12 @@ POSTS = [
     ('spring-2026-systems-recap', 'From ideas to small systems', '把零散想法做成小系统', 'building', 'What a season of small experiments had in common.'),
     ('astro-blog-content-structure-note', 'A stable home for content', '给内容一个稳定的位置', 'notes', 'Small decisions about structure that make writing easier.'),
     ('genericagent-wechat-reliability', 'When an agent goes quiet', '当智能体没有回复', 'notes', 'Follow the message, from receiving it to sending an answer.'),
+    ('newapi-cpa-route-diagnosis', 'Find the failed hop', 'NewAPI / CPA 路由诊断', 'notes', 'Trace the model, route, credential, relay and logs before changing a setting.'),
     ('ai-collaboration-engineering-workflow-note', 'Working with AI, thoughtfully', '与 AI 协作：从调研到交付', 'notes', 'A reading note on research, plans, collaboration and verification.'),
     ('narrarc-agentic-rag-architecture-note', 'Answers with evidence', '让答案带上证据', 'notes', 'How an answer can lead back to the messages behind it.'),
+    ('weekly-learning-system-from-checklist-note', 'A week with a receipt', '把学习清单落成每周执行', 'notes', 'One main module, two practical tasks, and evidence for the next review.'),
+    ('pai-codex-bridge-review', 'Bridging PAI and Codex', 'PAI-Codex 桥接复盘', 'building', 'Static instructions, runtime events, and a daily entry point.'),
+    ('teaching-doc-generator-pipeline-review', 'A resilient document pipeline', '教学文档流水线复盘', 'building', 'Five stages, fallback paths, and a PDF that survives the messy cases.'),
 ]
 
 posts = []
@@ -28,7 +32,7 @@ for slug, en, zh, kind, description_en in POSTS:
     _, meta, body = raw.split('---', 2)
     def field(name):
         return re.search(rf'^{name}:\s*(.+)$', meta, re.M).group(1).strip().strip('"')
-    # These six source files contain Markdown, no raw HTML.
+    # The selected source files contain Markdown, no executable raw HTML.
     if re.search(r'<(?:script|iframe|style|object)\b', body, re.I):
         raise ValueError(f'Unexpected embedded HTML in {slug}')
     parser = markdown.Markdown(extensions=['extra', 'toc', 'sane_lists'], extension_configs={'toc': {'slugify': lambda text, separator: text}})

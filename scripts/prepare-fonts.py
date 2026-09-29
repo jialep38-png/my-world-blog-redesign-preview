@@ -1,4 +1,4 @@
-"""Download the OFL Chinese fallback, subset to V7's characters, for self-hosting.
+"""Download the OFL Chinese fallback, subset to the site's characters, for self-hosting.
 
 Run again after adding text: python scripts/prepare-fonts.py
 Only Python's standard library is required. The website has no Google Fonts
@@ -66,7 +66,7 @@ def main() -> None:
         rules.append(
             "@font-face {\n"
             f'  font-family: "{family}";\n'
-            f'  src: url("{filename}.woff2?v=7") format("woff2");\n'
+            f'  src: url("{filename}.woff2?v=8") format("woff2");\n'
             f"  font-style: {style};\n"
             f"  font-weight: {weight};\n"
             "  font-display: swap;\n"
