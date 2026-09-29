@@ -1,0 +1,258 @@
+/* ============================================================
+   follow-art motion layer — replication
+   Implements: sticky-layer scroll narrative, cinematic reveals,
+   loading-screen pulse, clip-path underline, hover accent block.
+   Pure CSS + tiny JS hooks (see motion.js).
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. STICKY SECTION STACK  ("cover / reveal" scroll narrative)
+      Every section reserves 100svh beneath itself so the next
+      section slides OVER it. Layers are sticky at top:0.
+      Geometry lives in custom props so JS can retime it.
+   ------------------------------------------------------------ */
+.section {
+  --s-upd: 0svh;   /* overlap pulled from the previous section */
+  --s-und: 0svh;   /* height reserved underneath for the next   */
+  --s-mh: 0svh;    /* extra min-height                          */
+  display: grid;
+  grid-template-areas: "sticky_content";
+  grid-template-columns: 1fr;
+  grid-auto-rows: 1fr;
+  min-height: calc(var(--s-mh) + var(--s-upd) + var(--s-und));
+  margin-top: calc(var(--s-upd) * -1);
+  margin-bottom: calc(var(--s-und) * -1);
+  position: relative;
+}
+
+/* spacer keeps the reserved scroll room real */
+.section::after {
+  content: "";
+  display: block;
+  height: calc(var(--s-upd) + var(--s-und));
+}
+.section:has(.section__layer:not(.section__layer--sticky))::after { height: var(--s-und); }
+
+.section--under-next     { --s-und: 100svh; }
+.section--under-previous { --s-upd: 100svh; }
+.section--under-next + .section--under-previous {
+  margin-top: calc(-100svh - var(--s-upd));
+}
+.section--full-height { --s-mh: 100svh; }
+/* clip the overlap zone so nothing bleeds during the transition */
+.section--no-overflow { clip-path: inset(var(--s-upd) 0 var(--s-und) 0); }
+.section--above { z-index: 1; }
+
+.section__layer {
+  grid-area: sticky_content;
+  align-self: start;
+  min-width: 0;
+  min-height: var(--s-mh);
+  position: relative;
+}
+.section__layer--sticky {
+  contain: content;
+  position: sticky;
+  top: 0;
+  height: var(--s-h, auto);
+}
+.section__layer--full-height { --s-mh: 100svh; }
+.section__layer--above { z-index: 1; }
+
+/* the signature diagonal offset — exposes a sliver of the layer below */
+.section__layer--offset {
+  transform: translateX(8.611%) rotate(15deg);
+  transform-origin: 0% 0%;
+}
+
+/* ------------------------------------------------------------
+   2. CINEMATIC PAGE REVEAL
+      scaleY(0) -> scaleY(1): the title unrolls like a blind,
+      it does NOT fade. That distinction is the whole personality.
+   ------------------------------------------------------------ */
+.reveal-title {
+  transform: translateY(-80%) scaleY(0);
+  transform-origin: 50% 0%;
+  transition: transform var(--dur-cinematic) var(--ease-signature);
+}
+.is-revealed .reveal-title { transform: translateY(0) scaleY(1); }
+
+.reveal-decoration {
+  transform: translateY(300%) rotate(35deg);
+  transition: transform var(--dur-cinematic) var(--ease-signature);
+  transition-delay: 1s;                    /* waits for the title */
+}
+.is-revealed .reveal-decoration { transform: translateY(0) rotate(35deg); }
+
+.reveal-footer {
+  transform: translateY(120%);
+  transition: transform var(--dur-cinematic) var(--ease-signature);
+}
+.is-revealed .reveal-footer { transform: translateY(0); }
+
+/* header drops in from above the viewport */
+.reveal-header {
+  opacity: 0;
+  transform: translateY(-200%);
+  transition: opacity var(--dur-cinematic) var(--ease-signature),
+              transform var(--dur-cinematic) var(--ease-signature);
+}
+.reveal-header.is-revealed { opacity: 1; transform: translateY(0); }
+
+/* webgl canvas masks in on a diagonal */
+.reveal-canvas {
+  transform: translateY(100%) rotate(35deg);
+  transition: transform var(--dur-cinematic) var(--ease-signature);
+  transition-delay: 1s;
+}
+.is-revealed .reveal-canvas { transform: none; }
+
+/* ------------------------------------------------------------
+   3. LOADING SCREEN — 5 decorations pulsing in sequence (0.3s offsets)
+   ------------------------------------------------------------ */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--t-background);
+  transition: opacity var(--dur-base) ease;
+}
+.loading-screen.is-done { opacity: 0; pointer-events: none; }
+
+.loading-screen__decoration {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7vw;
+  opacity: 0;
+  animation: changingElements var(--dur-cinematic) linear infinite;
+}
+.loading-screen__decoration-1 { animation-delay: 0s; }
+.loading-screen__decoration-2 { animation-delay: .3s; }
+.loading-screen__decoration-3 { animation-delay: .6s; }
+.loading-screen__decoration-4 { animation-delay: .9s; }
+.loading-screen__decoration-5 { animation-delay: 1.2s; }
+
+@keyframes changingElements {
+  0%   { opacity: 0; }
+  10%  { opacity: 1; }
+  20%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* ------------------------------------------------------------
+   4. UNDERLINE  — clip-path sweep (no layout thrash, unlike width)
+   ------------------------------------------------------------ */
+.underline {
+  display: inline-block;
+  position: relative;
+}
+.underline__decoration {
+  position: absolute;
+  left: 0;
+  bottom: calc(var(--scale-px) * -4);
+  width: 100%;
+  height: calc(var(--scale-px) * 4);
+  background: currentColor;
+  content: "";
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--dur-base) var(--ease-signature);
+}
+.underline.is-shown .underline__decoration { clip-path: inset(0 0 0 0); }
+.underline--primary .underline__decoration { color: var(--t-primary); background: var(--t-primary); }
+.underline--accent  .underline__decoration { color: var(--t-accent);  background: var(--t-accent); }
+
+/* ------------------------------------------------------------
+   5. BUTTON — hover accent block wiping in from the left
+   ------------------------------------------------------------ */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5em;
+  padding: .9em 1.4em;
+  border: 0;
+  border-radius: var(--btn-border-radius, none);
+  background: transparent;
+  color: var(--t-text);
+  font: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.btn__label { position: relative; z-index: 1; }
+.btn__hover-accent {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--t-accent);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: 0% 50%;
+  transition: opacity var(--dur-base) var(--ease-signature),
+              transform var(--dur-base) var(--ease-signature);
+}
+.btn:hover .btn__hover-accent,
+.btn:focus-visible .btn__hover-accent { opacity: 1; transform: scaleX(1); }
+
+.btn--outline { box-shadow: inset 0 0 0 1px var(--t-line); }
+.btn--accent { color: var(--t-accent); }
+/* squash & stretch on press — volume roughly preserved */
+.btn:active { transform: scale(.97, 1.03); transition: transform var(--dur-micro) var(--ease-standard); }
+
+/* ------------------------------------------------------------
+   6. AMBIENT IDLE MOTION — the hand-drawn wobble on decorations
+   ------------------------------------------------------------ */
+@keyframes iconShake {
+  0%, 100% { transform: rotate(var(--shake-a, -4deg)); }
+  50%      { transform: rotate(var(--shake-b, 4deg)); }
+}
+.icon-shake,
+.icon-shake-reverse {
+  transform-origin: 50% 60%;
+  animation: iconShake 2.4s var(--ease-standard) infinite;
+}
+.icon-shake-reverse { --shake-a: 4deg; --shake-b: -4deg; }
+
+/* infinite marquee / loop carousel */
+@keyframes loopScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.loop-track {
+  display: flex;
+  width: max-content;
+  animation: loopScroll 40s linear infinite;
+}
+
+/* ------------------------------------------------------------
+   7. ACCESSIBILITY — honour reduced-motion everywhere
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal-title,
+  .reveal-decoration,
+  .reveal-footer,
+  .reveal-canvas { transform: none !important; }
+  .reveal-header { opacity: 1 !important; transform: none !important; }
+}
+
+/* keyboard focus stays visible */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--t-accent);
+  outline-offset: 3px;
+}

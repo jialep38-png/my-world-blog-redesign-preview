@@ -1,4 +1,4 @@
-"""Download OFL fonts, subset to the current preview's characters, for self-hosting.
+"""Download the OFL Chinese fallback, subset to V7's characters, for self-hosting.
 
 Run again after adding text: python scripts/prepare-fonts.py
 Only Python's standard library is required. The website has no Google Fonts
@@ -29,17 +29,12 @@ def fetch(url: str) -> bytes:
 
 def main() -> None:
     source = "".join((ROOT / name).read_text(encoding="utf-8")
-                     for name in ("index.html", "motion.js", "i18n.js", "scroll-scenes.js", "reading.js", "reading-data.js"))
+                     for name in ("index.html", "follow-blog.js", "reading-data.js"))
     glyphs = "".join(sorted(set(string.printable.strip() + " " + "".join(
         character for character in source if ord(character) > 127
     ))))
-    latin = "".join(chr(code) for code in range(32, 127))
     specs = (
-        ("Manrope:wght@400..600", "manrope", "Manrope", "normal", "400 600", "manrope", latin),
-        ("Instrument Serif", "instrument-serif", "Instrument Serif", "normal", "400", "instrumentserif", latin),
         ("Noto Sans SC:wght@300..600", "noto-sans-sc", "Noto Sans SC", "normal", "300 600", "notosanssc", glyphs),
-        ("Noto Serif SC:wght@400..600", "noto-serif-sc", "Noto Serif SC", "normal", "400 600", "notoserifsc", glyphs),
-        ("Instrument Serif:ital@1", "instrument-serif-italic", "Instrument Serif", "italic", "400", "instrumentserif", latin),
     )
     FONTS.mkdir(exist_ok=True)
     rules = []
@@ -65,11 +60,13 @@ def main() -> None:
             raise RuntimeError(f"Expected WOFF2 for {family}, received {data[:4]!r}")
         (FONTS / f"{filename}.woff2").write_bytes(data)
         license_url = f"https://raw.githubusercontent.com/google/fonts/main/ofl/{directory}/OFL.txt"
-        (FONTS / f"OFL-{filename}.txt").write_bytes(fetch(license_url))
+        notice = FONTS / f"OFL-{filename}.txt"
+        if not notice.exists():
+            notice.write_bytes(fetch(license_url))
         rules.append(
             "@font-face {\n"
             f'  font-family: "{family}";\n'
-            f'  src: url("{filename}.woff2?v=6") format("woff2");\n'
+            f'  src: url("{filename}.woff2?v=7") format("woff2");\n'
             f"  font-style: {style};\n"
             f"  font-weight: {weight};\n"
             "  font-display: swap;\n"

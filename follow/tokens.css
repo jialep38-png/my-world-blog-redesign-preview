@@ -1,0 +1,220 @@
+/* ============================================================
+   follow-art design tokens — replication layer
+   Source: https://follow.art/  (decompiled from _nuxt/*.css + runtime)
+   Drop-in foundation. No JS dependencies.
+   ============================================================ */
+
+@layer reset, base, utilities, components-base, components, overrides;
+
+/* ------------------------------------------------------------
+   1. PALETTE (verbatim from --c-* tokens)
+   ------------------------------------------------------------ */
+:root {
+  --c-white: #ffffff;
+  --c-grey: #9c9c9c;
+  --c-black: #000000;
+  --c-orange: #f4793a;
+  --c-green: #8e9487;
+  --c-pink: #c5939d;
+  --c-blue: #8498ac;
+  --c-error: #ea1b4f;
+
+  --c-white-10: hsla(0, 0%, 100%, .1);
+  --c-white-20: hsla(0, 0%, 100%, .2);
+  --c-white-30: hsla(0, 0%, 100%, .3);
+  --c-white-60: hsla(0, 0%, 100%, .6);
+  --c-black-3: rgba(0, 0, 0, .03);
+  --c-black-15: rgba(0, 0, 0, .15);
+  --c-black-20: rgba(0, 0, 0, .2);
+  --c-black-60: rgba(0, 0, 0, .6);
+}
+
+/* ------------------------------------------------------------
+   2. SCALE BASIS  (design canvas = 1440px)
+      .06944vw === 1/14.4  ->  exactly 1px at 1440px viewport
+   ------------------------------------------------------------ */
+:root {
+  --scale-px: clamp(.5px, .06944vw, 1px);
+  --scale-text-px: clamp(.7px, calc(.4px + .04167vw), 1px);
+  --scale-text-rem: clamp(.7rem, calc(.7rem + .41667vw - 3px), 1rem);
+  --spacing: calc(clamp(.5px, .06944vw, 1px) * 20);
+
+  /* layout rhythm */
+  --xxxxl: calc(var(--scale-px) * 60);
+  --xxxl: calc(var(--scale-px) * 40);
+  --xxl: calc(var(--scale-px) * 30);
+  --xl: calc(var(--scale-px) * 24);
+  --lg: calc(var(--scale-px) * 20);
+  --md: calc(var(--scale-px) * 16);
+  --sm: calc(var(--scale-px) * 12);
+  --xs: calc(var(--scale-px) * 8);
+
+  /* motion — the single signature curve of the whole site */
+  --ease-signature: cubic-bezier(.55, 0, .1, 1);
+  --ease-standard: cubic-bezier(.4, 0, .2, 1);
+  --ease-enter: cubic-bezier(0, 0, .2, 1);
+  --ease-exit: cubic-bezier(.4, 0, 1, 1);
+  --ease-back: cubic-bezier(.34, 1.56, .64, 1);
+
+  --dur-micro: .1s;
+  --dur-fast: .2s;
+  --dur-base: .4s;
+  --dur-slow: .8s;
+  --dur-cinematic: 1.5s;   /* page-level reveals */
+
+  --btn-border-radius: none;
+}
+
+/* ------------------------------------------------------------
+   3. SEMANTIC THEME LAYER --t-*  (swap via .ui-* classes)
+   ------------------------------------------------------------ */
+:root,
+.ui-background {
+  --t-background: var(--c-white);
+  --t-avatar: var(--c-black-3);
+  --t-line: var(--c-black-15);
+  --t-line-thin: var(--c-black-20);
+  --t-small: var(--c-grey);
+  --t-text: var(--c-black);
+  --t-heading: var(--c-black);
+  --t-primary: var(--c-orange);
+  --t-accent: var(--c-orange);
+}
+
+.ui-dark {
+  --t-background: var(--c-black);
+  --t-avatar: var(--c-white-10);
+  --t-line: var(--c-white-30);
+  --t-line-thin: var(--c-white-20);
+  --t-small: var(--c-white-60);
+  --t-text: var(--c-white);
+  --t-heading: var(--c-white);
+  --t-primary: var(--c-white);
+  --t-accent: var(--c-orange);
+}
+
+.ui-orange {
+  --t-background: var(--c-orange);
+  --t-text: var(--c-black);
+  --t-heading: var(--c-black);
+  --t-accent: var(--c-black);
+  --t-primary: var(--c-black);
+}
+
+.ui-blue { --t-background: var(--c-blue); --t-text: var(--c-black); --t-heading: var(--c-black); }
+.ui-pink { --t-background: var(--c-pink); --t-text: var(--c-black); --t-heading: var(--c-black); }
+.ui-green { --t-background: var(--c-green); --t-text: var(--c-black); --t-heading: var(--c-black); }
+
+/* ------------------------------------------------------------
+   4. BREAKPOINTS — the --md / --n-md dual-value system
+      Desktop branch: --md    Mobile branch: --n-md
+      Usage:  property: var(--md, DESKTOP) var(--n-md, MOBILE);
+   ------------------------------------------------------------ */
+:root {
+  --md: initial;    /* desktop value slot (empty => falls back) */
+  --n-md: initial;  /* mobile value slot */
+  --xxxxl: initial;
+  --n-xxxxl: initial;
+  --xxxl: initial;
+  --n-xxxl: initial;
+}
+
+/* ------------------------------------------------------------
+   5. TYPOGRAPHY
+      Hardbop Bold   -> display / uppercase headings
+      HeadingNow 73  -> body / UI, tight -0.03em tracking
+      Optical kerning tuned via --fos (start) / --foe (end)
+   ------------------------------------------------------------ */
+
+@font-face {
+  font-family: HeadingNow;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/HeadingNow-73Book.woff2") format("woff2");
+}
+@font-face {
+  font-family: Hardbop;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/Hardbop-Bold.woff2") format("woff2");
+}
+
+@layer base {
+  html { font-size: 12px; -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--t-background);
+    color: var(--t-text);
+    font-family: HeadingNow, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: -.03em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+}
+
+@layer components-base {
+  .text-h1 {
+    font-family: Hardbop, Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    --fos: -.167em; --foe: -.133em;
+    font-size: calc(var(--scale-text-rem) * 38.5);
+    line-height: calc(var(--scale-text-rem) * 30);
+  }
+
+  /* the workhorse display size — h2 reaches 199px at 1440px */
+  .text-h2 {
+    font-family: Hardbop, Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    --fos: -.167em; --foe: -.133em;
+    font-size: calc(var(--scale-text-rem) * 38.5);
+    line-height: calc(var(--scale-text-rem) * 30);
+  }
+
+  .text-h5 {
+    font-family: Hardbop, Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: calc(var(--scale-text-rem) * 8.5);
+    line-height: calc(var(--scale-text-rem) * 9);
+  }
+
+  .text-h4, .text-small {
+    font-family: HeadingNow, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: -.03em;
+    --fos: -.169em; --foe: -.088em;
+    font-size: calc(var(--scale-text-rem) * 2.6);
+    line-height: calc(var(--scale-text-rem) * 3);
+  }
+
+  .text-bit-small {
+    font-family: HeadingNow, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: -.03em;
+    font-size: calc(var(--scale-text-rem) * 2);
+    line-height: calc(var(--scale-text-rem) * 2.5);
+  }
+
+  .text-smaller {
+    font-family: HeadingNow, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: -.03em;
+    font-size: calc(var(--scale-text-rem) * 1.6);
+    line-height: calc(var(--scale-text-rem) * 2);
+  }
+
+  .text-color-small { color: var(--t-small); }
+
+  /* optical trim: removes half-leading above cap-height */
+  .text-box-trim { display: inline-block; }
+}
