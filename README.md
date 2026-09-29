@@ -1,6 +1,6 @@
 # JI_FENG — follow.art adaptation preview
 
-[在线预览](https://jialep38-png.github.io/my-world-blog-redesign-preview/?v=7)
+[在线预览](https://jialep38-png.github.io/my-world-blog-redesign-preview/?v=7.1)
 
 这是个人博客第七版的独立预览。视觉骨架直接取自用户提供的 follow.art 本地复刻代码：橙／粉／绿／蓝色面、Hardbop 巨幅标题、Heading Now 正文、五拍开场、滚动叠层、对角漂移与卷帘式文字入场。品牌、文案、文章、项目和图片均已换为 Ji_Feng 自己的内容；正式站 [2006038.xyz](https://2006038.xyz/) 尚未替换。
 
