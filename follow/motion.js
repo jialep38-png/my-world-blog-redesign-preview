@@ -181,8 +181,8 @@ export function initLoadingScreen(selector = '.loading-screen', holdMs = 1600) {
       if (left > 0) setTimeout(wait, left);
       else requestAnimationFrame(finish);
     };
-    if (document.readyState === 'complete') wait();
-    else window.addEventListener('load', wait, { once: true });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wait, { once: true });
+    else wait();
   });
 
   return { done };

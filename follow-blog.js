@@ -1,4 +1,4 @@
-import { initLayerDrift, initReveals, initUnderlines, initLoadingScreen } from './follow/motion.js';
+import { initLayerDrift, initReveals, initUnderlines, initLoadingScreen } from './follow/motion.js?v=9';
 
 /* FOLLOW.ART's recovered motion functions drive the personal blog's own content. */
 const $=(selector,root=document)=>root.querySelector(selector);
@@ -9,6 +9,11 @@ const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&l
 const T=(en,zh)=>lang==='zh'?zh:en;
 let lang='en',view='home',activePost='',filter='all',journalIndex=0,planetIndex=0,busy=false,queuedHash='',homeScroll=0;
 const picks=['reconnect-blog-content-notes','narrarc-agentic-rag-architecture-note','genericagent-wechat-reliability'].map(slug=>posts.find(post=>post.slug===slug));
+const featureSteps={
+  'reconnect-blog-content-notes':{en:['WRITE','ROUTE','RETURN'],zh:['写下','归档','回看']},
+  'narrarc-agentic-rag-architecture-note':{en:['QUERY','TRACE','CITE'],zh:['提问','追溯','引用']},
+  'genericagent-wechat-reliability':{en:['RECEIVE','GENERATE','SEND'],zh:['接收','生成','发送']}
+};
 const planets=[
   {slug:'yesterday-today',en:'Yesterday, today',zh:'昨天，今天'},
   {slug:'crossover',en:'Deleted a hundred times',zh:'删了一百遍'},
@@ -32,15 +37,16 @@ function setLanguage(next){
   renderJournal();renderPlanets();renderArchive();
   if(view==='reading'&&activePost){const y=scrollY;renderArticle(activePost);window.scrollTo({top:y,behavior:'instant'});}
   else if(view==='archive')document.title=T('Journal','随笔')+' / JI_FENG';
-  else document.title=T('JI_FENG — A small world','霁风 — 一方小世界');
+  else document.title=T('JI_FENG | A small world','霁风 | 一方小世界');
 }
 
 function renderJournal(){
   if(picks.some(post=>!post))return;
   $('#journal-card-slot').innerHTML=picks.map((post,index)=>{
     const name=escape(T(post.en,post.zh)),summary=escape(T(post.summaryEn,post.summary));
+    const steps=T(featureSteps[post.slug].en,featureSteps[post.slug].zh).map(step=>`<em>${escape(step)}</em>`).join('');
     const place=index===journalIndex?'is-active':index===(journalIndex+2)%3?'is-before':'is-after';
-    return `<a class="feature-card ${place}" href="#/reading/${post.slug}" aria-label="${name}"><small>${post.date.replaceAll('-','.')} / ${T(post.type.toUpperCase(),post.type==='building'?'构建':'笔记')}</small><strong>${name}</strong><p>${summary}</p><figure><span>JI_FENG<br>NOTES</span><i>0${index+1} / 03</i></figure><b aria-hidden="true">↗</b></a>`;
+    return `<a class="feature-card ${place}" href="#/reading/${post.slug}"><small>${post.date.replaceAll('-','.')} / ${T(post.type.toUpperCase(),post.type==='building'?'构建':'笔记')}</small><strong>${name}</strong><p>${summary}</p><figure class="feature-cover"><span class="feature-cover__steps">${steps}</span><i>${T('READ THE PROCESS','阅读过程')}</i></figure><b aria-hidden="true">↗</b></a>`;
   }).join('');
   $('#journal-index').textContent=`0${journalIndex+1} / 03`;
 }
@@ -50,7 +56,7 @@ function renderPlanets(){
   $('#collection-cards').innerHTML=planets.map((planet,index)=>{
     const relative=(index-planetIndex+planets.length)%planets.length;
     const place=['is-active','is-after','is-far-after','is-far-before','is-before'][relative];
-    return `<a class="planet-card ${place}" href="https://2006038.xyz/planets/${planet.slug}/" aria-label="${escape(T(planet.en,planet.zh))}"><img src="assets/planets/${planet.slug}/cover.webp" alt="${escape(T(planet.en,planet.zh))}" width="1600" height="1600" loading="lazy"><footer><span>0${index+1} / 05<br><strong>${escape(T(planet.en,planet.zh))}</strong></span><b aria-hidden="true">↗</b></footer></a>`;
+    return `<a class="planet-card ${place}" href="https://2006038.xyz/planets/${planet.slug}/"><img src="assets/planets/${planet.slug}/cover.webp" alt="" width="1600" height="1600" loading="lazy"><footer><span>0${index+1} / 05<br><strong>${escape(T(planet.en,planet.zh))}</strong></span><b aria-hidden="true">↗</b></footer></a>`;
   }).join('');
   $('#collection-index').textContent=`0${planetIndex+1} / 05`;
 }
@@ -133,7 +139,7 @@ async function performRoute(hash,initial=false){
   setVisible(target.type);
   if(target.type==='reading')renderArticle(target.slug);
   else if(target.type==='archive'){document.title=T('Journal','随笔')+' / JI_FENG';$('#route-status').textContent=T('Journal','随笔');}
-  else {document.title=T('JI_FENG — A small world','霁风 — 一方小世界');$('#route-status').textContent=T('Home','首页');}
+  else {document.title=T('JI_FENG | A small world','霁风 | 一方小世界');$('#route-status').textContent=T('Home','首页');}
   window.scrollTo({top:0,behavior:'instant'});
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
   if(target.type==='home'){
