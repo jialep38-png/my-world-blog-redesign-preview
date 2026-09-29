@@ -173,7 +173,7 @@ export function initLoadingScreen(selector = '.loading-screen', holdMs = 1600) {
     const finish = () => {
       el.classList.add('is-done');
       document.querySelectorAll('#opening [data-reveal], #site-header').forEach(n => n.classList.add('is-revealed'));
-      setTimeout(() => { el.style.display = 'none'; resolve(); }, 400);
+      setTimeout(() => { el.style.display = 'none'; resolve(); }, 350);
     };
     const started = performance.now();
     const wait = () => {

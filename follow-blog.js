@@ -1,4 +1,4 @@
-import { initLayerDrift, initReveals, initUnderlines, initLoadingScreen } from './follow/motion.js?v=9';
+import { initLayerDrift, initReveals, initUnderlines, initLoadingScreen } from './follow/motion.js?v=10';
 
 /* FOLLOW.ART's recovered motion functions drive the personal blog's own content. */
 const $=(selector,root=document)=>root.querySelector(selector);
@@ -194,4 +194,4 @@ else {setVisible('home');updateHeaderColour();}
 const startMotion=()=>{initLayerDrift();initReveals();initUnderlines();};
 let seen=false;try{seen=sessionStorage.getItem('ji-feng-follow-intro')==='seen';sessionStorage.setItem('ji-feng-follow-intro','seen');}catch{}
 if(reduce.matches||seen){$('#loader').hidden=true;$('#opening .scene__layer').classList.add('is-revealed');$('#site-header').classList.add('is-revealed');startMotion();}
-else initLoadingScreen('#loader',1200).done.then(startMotion);
+else initLoadingScreen('#loader',900).done.then(startMotion);
